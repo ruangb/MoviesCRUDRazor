@@ -1,9 +1,12 @@
+using InvestManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MoviesCRUDRazor.Data;
 
 namespace MoviesCRUDRazor
 {
@@ -19,9 +22,13 @@ namespace MoviesCRUDRazor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) 
         {
-            services.AddControllers();
-
             services.AddMvc(opt => opt.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            services.AddDbContext<MoviesCRUDRazorContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MoviesCRUDRazorContext"), builder =>
+                        builder.MigrationsAssembly("MoviesCRUDRazor")));
+
+            services.AddScoped<MovieService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

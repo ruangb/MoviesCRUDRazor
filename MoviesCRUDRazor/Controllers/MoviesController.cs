@@ -9,16 +9,16 @@ namespace MoviesCRUDRazor.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly MovieService _MovieService;
+        private readonly MovieService _movieService;
 
-        public MoviesController(MovieService MovieService)
+        public MoviesController(MovieService movieService)
         {
-            _MovieService = MovieService;
+            _movieService = movieService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var list = await _MovieService.FindAllAsync();
+            var list = await _movieService.FindAllAsync();
 
             return View(list);
         }
@@ -30,12 +30,12 @@ namespace MoviesCRUDRazor.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Movie Movie)
+        public async Task<IActionResult> Create(Movie movie)
         {
             if (!ModelState.IsValid)
-                return View(Movie);
+                return View(movie);
 
-            await _MovieService.InsertAsync(Movie);
+            await _movieService.InsertAsync(movie);
             return Redirect(nameof(Index));
         }
 
@@ -43,7 +43,7 @@ namespace MoviesCRUDRazor.Controllers
         {
             if (id != null)
             {
-                var obj = await _MovieService.FindByIdAsync(id.Value);
+                var obj = await _movieService.FindByIdAsync(id.Value);
 
                 if (obj != null)
                     return View(obj);
@@ -58,7 +58,7 @@ namespace MoviesCRUDRazor.Controllers
         {
             try
             {
-                await _MovieService.RemoveAsync(id);
+                await _movieService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
@@ -71,7 +71,7 @@ namespace MoviesCRUDRazor.Controllers
         {
             if (id != null)
             {
-                var obj = await _MovieService.FindByIdAsync(id.Value);
+                var obj = await _movieService.FindByIdAsync(id.Value);
 
                 if (obj != null)
                     return View(obj);
@@ -85,7 +85,7 @@ namespace MoviesCRUDRazor.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
 
-            var obj = await _MovieService.FindByIdAsync(id.Value);
+            var obj = await _movieService.FindByIdAsync(id.Value);
 
             if (obj == null)
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -95,17 +95,17 @@ namespace MoviesCRUDRazor.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Movie Movie)
+        public async Task<IActionResult> Edit(int id, Movie movie)
         {
             if (!ModelState.IsValid)
-                return View(Movie);
+                return View(movie);
 
-            if (id != Movie.Id)
+            if (id != movie.Id)
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
 
             try
             {
-                await _MovieService.UpdateAsync(Movie);
+                await _movieService.UpdateAsync(movie);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)

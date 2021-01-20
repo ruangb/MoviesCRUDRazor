@@ -5,6 +5,11 @@ namespace MoviesCRUDRazor.Data
 {
     public class MoviesCRUDRazorContext : DbContext
     {
+        public MoviesCRUDRazorContext(DbContextOptions<MoviesCRUDRazorContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Movie> Movies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
